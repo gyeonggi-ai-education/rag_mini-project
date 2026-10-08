@@ -6,8 +6,8 @@ load_dotenv(override=True)
 
 # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-API_KEY = os.getenv("LLM_API_KEY") or os.getenv("MONOROUTER_API_KEY")
-BASE_URL = os.getenv("LLM_BASE_URL") or os.getenv("MONOROUTER_BASE_URL")
+API_KEY = os.getenv("LLM_API_KEY")
+BASE_URL = os.getenv("LLM_BASE_URL")
 
 MODEL = os.getenv("LLM_MODEL", "gpt-5.4-mini")
 TEMPERATURE = os.getenv("LLM_TEMPERATURE", 2)
