@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>평가 결과</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #fff; --head: #f1f2f5; --border: #e3e5ea;
+    --text: #1d2330; --muted: #6b7280; --accent: #4f46e5; --ok: #15803d; --bad: #dc2626; --gold: #fef3c7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161b; --card: #1c1f26; --head: #232731; --border: #2f3441; --text: #e6e8ee;
+            --muted: #9aa1b0; --accent: #818cf8; --ok: #4ade80; --bad: #f87171; --gold: #3b3320; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, -apple-system, "Noto Sans KR", sans-serif; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+  header h1 { font-size: 16px; margin: 0; flex: 1; }
+  header a { color: var(--accent); font-size: 13px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  h2 { font-size: 15px; margin: 28px 0 10px; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--head); font-weight: 600; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  tr.pick { cursor: pointer; } tr.pick:hover td, tr.sel td { background: var(--head); }
+  td.num { font-variant-numeric: tabular-nums; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .card .v { font-size: 28px; font-weight: 700; } .card .l { font-weight: 600; }
+  .card .d { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .q { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; padding: 12px 14px; }
+  .q .title { font-weight: 600; margin-bottom: 4px; }
+  .q .sub { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .badge { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 6px; background: var(--head); margin-right: 6px; }
+  .ok { color: var(--ok); } .bad { color: var(--bad); } .muted { color: var(--muted); }
+  tr.gold td { background: var(--gold); }
+  code { font-size: 12px; }
+  details summary { cursor: pointer; color: var(--accent); font-size: 12px; margin-top: 8px; }
+  .content { white-space: pre-wrap; font-size: 12px; color: var(--muted); margin-top: 6px; max-height: 180px; overflow: auto; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .empty { text-align: center; color: var(--muted); padding: 40px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin-top: 8px; }
+  .cell { background: var(--head); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+  .cell .mode { font-weight: 700; margin-bottom: 4px; }
+  .cell .art { display: flex; gap: 6px; }
+  .best { font-weight: 700; color: var(--ok); }
+  select { font: inherit; color: inherit; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+  .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <div class="bar"><h2 style="margin:0">모드별 비교</h2><select id="run"></select></div>
+  <div id="note"></div>
+  <div class="panel" id="compare"></div>
+  <h2>질문별 비교 <span class="muted" style="font-weight:400">(✅ 정답 조문, ❌ 정답 아님 · 순위 순)</span></h2>
+  <div id="questions"></div>
+</main>
+<script src="/static/nav.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (v, d = 2) => (typeof v === "number" ? v.toFixed(d) : "-");
+const LABEL = { baseline: "기본 검색", rerank: "Rerank", multi_query: "Multi Query", combined: "Multi Query + Rerank" };
+const COLS = [
+  ["hit", "Hit@5", "정답 조문이 상위 5개 안에 있는 질문의 비율", true, 2],
+  ["recall", "Recall@5", "필요한 정답 조문 중 상위 5개 안에서 찾은 비율의 평균", true, 2],
+  ["mrr", "MRR", "정답 조문이 몇 위에 나왔는지(1위=1.0, 2위=0.5, 못 찾으면 0)의 평균", true, 2],
+  ["candidate_recall", "후보 Recall@20", "Rerank 전 후보 20개 안에 정답이 있었던 비율", true, 2],
+  ["avg_latency_sec", "지연(초)", "질문 1개당 평균 검색 시간(캐시 사용 시 실제보다 짧음)", false, 3],
+  ["monorouter_requests", "모델 호출", "이 모드가 평가 중 보낸 MonoRouter 요청 수", false, 0],
+];
+
+async function api(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+  return res.json();
+}
+
+function compareTable(d) {
+  const ok = d.modes.filter((m) => d.metrics[m].status === "ok");
+  const best = {};
+  COLS.filter((c) => c[3]).forEach(([k]) => { best[k] = Math.max(...ok.map((m) => d.metrics[m][k] ?? -1)); });
+  const head = COLS.map(([, l, desc]) => `<th title="${esc(desc)}">${l}</th>`).join("");
+  const rows = d.modes.map((m) => {
+    const x = d.metrics[m];
+    if (x.status !== "ok") return `<tr><td><b>${esc(LABEL[m] || m)}</b></td><td colspan="${COLS.length}" class="muted">이 실행에서는 측정되지 않았습니다</td></tr>`;
+    const cells = COLS.map(([k, , , isBest, dg]) => `<td class="num ${isBest && x[k] === best[k] ? "best" : ""}">${fmt(x[k], dg)}</td>`).join("");
+    return `<tr><td><b>${esc(LABEL[m] || m)}</b></td>${cells}</tr>`;
+  }).join("");
+  return `<table><tr><th>모드</th>${head}</tr>${rows}</table>`;
+}
+
+function cellHtml(mode, m) {
+  if (!m || m.status !== "ok") return `<div class="cell"><div class="mode">${esc(LABEL[mode] || mode)}</div><span class="muted">측정 안 됨</span></div>`;
+  const rr = typeof m.rr === "number" ? m.rr.toFixed(2) : "-";
+  const verdict = m.verdict_vs_baseline ? ` <span class="${m.verdict_vs_baseline === "개선" ? "ok" : m.verdict_vs_baseline === "악화" ? "bad" : "muted"}">${m.verdict_vs_baseline}</span>` : "";
+  const list = (m.retrieved || []).map((r) => `<div class="art"><span class="muted">${r.rank}</span><span>${esc(r.article)} ${r.is_gold ? "✅" : "❌"}</span></div>`).join("");
+  const queries = m.queries ? `<details><summary>확장 질의 ${m.queries.length}개</summary><div class="content">${m.queries.map(esc).join("\n")}</div></details>` : "";
+  const change = m.mq_change && (m.mq_change.added.length || m.mq_change.dropped.length)
+    ? `<div class="note">원질문 대비 +${m.mq_change.added.length} / -${m.mq_change.dropped.length}${m.mq_change.added_gold.length ? " (정답 추가 ✅)" : ""}</div>` : "";
+  return `<div class="cell"><div class="mode">${esc(LABEL[mode] || mode)}</div><div>RR ${rr}${verdict}</div>${list}${change}${queries}</div>`;
+}
+
+function questionHtml(q, modes) {
+  const gold = (q.gold || []).join(", ") || "답변 불가 문항";
+  return `<div class="q"><div class="title">${esc(q.question)}</div>
+    <div class="sub">${esc(q.id)} · ${esc(q.type)} · 정답 조문: ${esc(gold)}</div>
+    <div class="grid">${modes.map((m) => cellHtml(m, q.modes[m])).join("")}</div></div>`;
+}
+
+async function show(stamp) {
+  try {
+    const d = await api(`/api/eval/runs/${stamp}`);
+    const c = d.config || {};
+    $("note").innerHTML = `<div class="note">골든셋 ${esc(c.num_questions)}문항 · 컬렉션 ${esc(c.collection)} · 모델 ${esc(c.llm_model)} · 후보 ${esc(c.candidate_k)}개 → 최종 ${esc(c.final_k)}개</div>`;
+    $("compare").innerHTML = compareTable(d);
+    $("questions").innerHTML = d.questions.map((q) => questionHtml(q, d.modes)).join("");
+  } catch (e) {
+    $("compare").innerHTML = `<div class="empty bad">${esc(e.message)}</div>`;
+    $("questions").innerHTML = "";
+  }
+}
+
+(async () => {
+  try {
+    const { runs } = await api("/api/eval/runs");
+    if (!runs.length) { $("compare").innerHTML = '<div class="empty">평가 결과가 없습니다.<br><code>uv run python -m evaluation.run_eval</code></div>'; return; }
+    $("run").innerHTML = runs.map((r) => `<option value="${esc(r.stamp)}">${esc(r.stamp)} (${r.modes.length}개 모드)</option>`).join("");
+    $("run").onchange = () => show($("run").value);
+    show(runs[0].stamp);
+  } catch (e) { $("compare").innerHTML = `<div class="empty bad">${esc(e.message)}</div>`; }
+})();
+</script>
+</body>
+</html>

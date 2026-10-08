@@ -1,0 +1,37 @@
+{
+  "summary": {
+    "mode": "rerank",
+    "status": "not_connected",
+    "message": "Rerank가 아직 연결되지 않았습니다 (retrieval/rerank.py 의 rerank 함수 필요)",
+    "final_k": 5,
+    "candidate_k": 20
+  },
+  "rows": [],
+  "config": {
+    "golden_set": "golden_set.jsonl",
+    "golden_set_hash": "faa005017cce",
+    "split": "all",
+    "num_questions": 10,
+    "data_version": "law-21311:whole-article-v1:data-mvp-v1",
+    "collection": "data_ingestion_law21311_v1",
+    "llm_model": "gpt-5.4-mini",
+    "embedding_model": "text-embedding-3-small",
+    "answer_generator": "none",
+    "answer_modes": [],
+    "judge": "none",
+    "judge_version": null,
+    "expand_prompt_version": "v2",
+    "code_version": "218d0b5-dirty",
+    "cache": "on",
+    "prepare": {
+      "batch_expanded": 0,
+      "batch_failed": [
+        "AttributeError: 'NoneType' object has no attribute 'items'"
+      ],
+      "requests": 2
+    },
+    "mode": "rerank",
+    "final_k": 5,
+    "candidate_k": 20
+  }
+}

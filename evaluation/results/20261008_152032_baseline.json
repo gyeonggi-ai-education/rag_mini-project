@@ -1,0 +1,809 @@
+{
+  "summary": {
+    "mode": "baseline",
+    "final_k": 5,
+    "candidate_k": 20,
+    "num_unanswerable": 0,
+    "n": 10,
+    "hit@5": 0.9,
+    "recall@5": 0.85,
+    "mrr": 0.85,
+    "avg_latency_sec": 0.003,
+    "avg_llm_calls": 0.0,
+    "expansion_failures": 0,
+    "total_tokens": 0,
+    "avg_tokens": 0.0,
+    "by_type": {
+      "MQ": {
+        "n": 3,
+        "hit@5": 0.6667,
+        "recall@5": 0.5,
+        "mrr": 0.5
+      },
+      "RR": {
+        "n": 4,
+        "hit@5": 1.0,
+        "recall@5": 1.0,
+        "mrr": 1.0
+      },
+      "기준": {
+        "n": 1,
+        "hit@5": 1.0,
+        "recall@5": 1.0,
+        "mrr": 1.0
+      },
+      "둘다": {
+        "n": 2,
+        "hit@5": 1.0,
+        "recall@5": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "rate_limit_wait_sec": 0.0,
+    "monorouter_requests": 0,
+    "rate_limited_total": 0,
+    "status": "ok"
+  },
+  "rows": [
+    {
+      "id": 1,
+      "type": "기준",
+      "answerable": true,
+      "latency_sec": 0.005,
+      "question": "인공지능기본법은 무엇을 목적으로 만들어졌나요?",
+      "gold": [
+        "제1조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "7805050eca7b5905d307cd63a967811e6cbf58745dea4cf39a500aad6ea60392",
+          "article": "제1조",
+          "score": 0.6496,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제1조(목적) 이 법은 인공지능의 건전한 발전과 신뢰 기반 조성에 필요한 기본적인 사항을 규정함으로써 국민의 권익과\n 존엄성을 보호하고 국민의 "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909",
+          "article": "제3조",
+          "score": 0.5767,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제3조(기본원칙 및 국가 등의 책무) ① 인공지능기술과 인공지능산업은 안전성과 신뢰성을 제고하여 국민의 삶의 질을\n 향상시키는 방향으로 발전되어"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "daec0443c791b520b2932f95f8361fc8a9ef0688acfdb425457bb8f71ceff568",
+          "article": "제29조",
+          "score": 0.5662,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제29조(인공지능 신뢰 기반 조성을 위한 시책의 마련) 정부는 인공지능이 국민의 생활에 미치는 잠재적 위험을 최소화\n 하고 안전한 인공지능의 이"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "8316c53ed1904a20bb71052ed3d505cd1daae16e4002a7d8865aca4e622e3773",
+          "article": "제5조",
+          "score": 0.5404,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제5조(다른 법률과의 관계) ① 인공지능, 인공지능기술, 인공지능산업 및 인공지능사회(이하 “인공지능등”이라 한다)에\n 관하여 다른 법률에 특별"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636",
+          "article": "제31조",
+          "score": 0.5346,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제31조(인공지능 투명성 확보 의무) ① 인공지능사업자는 고영향 인공지능이나 생성형 인공지능을 이용한 제품 또는\n 서비스를 제공하려는 경우 제품"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "7805050eca7b5905d307cd63a967811e6cbf58745dea4cf39a500aad6ea60392": "제1조",
+        "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909": "제3조",
+        "daec0443c791b520b2932f95f8361fc8a9ef0688acfdb425457bb8f71ceff568": "제29조",
+        "8316c53ed1904a20bb71052ed3d505cd1daae16e4002a7d8865aca4e622e3773": "제5조",
+        "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636": "제31조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 2,
+      "type": "MQ",
+      "answerable": true,
+      "latency_sec": 0.004,
+      "question": "AI가 내 대출을 거절했는데 왜 그런 결정이 나왔는지 설명을 들을 수 있나요?",
+      "gold": [
+        "제3조",
+        "제34조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "da85406ac5dd3f8bf8f88e59f7b28987d81618d1151c20709a1dcfb1cb9748f7",
+          "article": "제40조",
+          "score": 0.4005,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제40조(사실조사 등) ① 과학기술정보통신부장관은 다음 각 호의 어느 하나에 해당하는 경우에는 인공지능사업자에 대\n 하여 관련 자료를 제출하게 "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a",
+          "article": "제21조",
+          "score": 0.3642,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제21조(전문인력의 확보) ① 과학기술정보통신부장관은 인공지능기술의 개발 및 인공지능산업의 발전을 위하여 「지능\n 정보화 기본법」 제23조제1항"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "a0df9c167ea15f4d25d16532c7f9ab55ff0da635de22ac86d6fa3b7a013e18e6",
+          "article": "제23조",
+          "score": 0.3567,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제23조(인공지능집적단지 지정 등) ① 국가 및 지방자치단체는 인공지능산업의 진흥과 인공지능 개발ㆍ활용의 경쟁력\n 강화를 위하여 인공지능 및 인"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "7d4f573aa9b144fccade9ece1978c2cd0391bdc1eb8d2647a8e4a827e3b0cc4e",
+          "article": "제25조",
+          "score": 0.3534,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제25조(인공지능 데이터센터 관련 시책의 추진 등) ① 정부는 인공지능의 개발ㆍ활용 등에 이용되는 데이터센터(이하\n “인공지능 데이터센터”라 한"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908",
+          "article": "제32조",
+          "score": 0.3509,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제32조(인공지능 안전성 확보 의무) ① 인공지능사업자는 학습에 사용된 누적 연산량이 대통령령으로 정하는 기준 이\n 상인 인공지능시스템의 안전성"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "da85406ac5dd3f8bf8f88e59f7b28987d81618d1151c20709a1dcfb1cb9748f7": "제40조",
+        "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a": "제21조",
+        "a0df9c167ea15f4d25d16532c7f9ab55ff0da635de22ac86d6fa3b7a013e18e6": "제23조",
+        "7d4f573aa9b144fccade9ece1978c2cd0391bdc1eb8d2647a8e4a827e3b0cc4e": "제25조",
+        "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908": "제32조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 0.0,
+      "recall": 0.0,
+      "rr": 0.0
+    },
+    {
+      "id": 3,
+      "type": "MQ",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "AI로 만든 그림이나 영상에는 AI가 만들었다고 표시해야 하나요?",
+      "gold": [
+        "제31조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909",
+          "article": "제3조",
+          "score": 0.348,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제3조(기본원칙 및 국가 등의 책무) ① 인공지능기술과 인공지능산업은 안전성과 신뢰성을 제고하여 국민의 삶의 질을\n 향상시키는 방향으로 발전되어"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636",
+          "article": "제31조",
+          "score": 0.3476,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제31조(인공지능 투명성 확보 의무) ① 인공지능사업자는 고영향 인공지능이나 생성형 인공지능을 이용한 제품 또는\n 서비스를 제공하려는 경우 제품"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "b2924fdffe2ceede3ea0ab43ab86095ee409acfa1e34609597c58bea482228d8",
+          "article": "제22조의3",
+          "score": 0.3173,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제22조의3(인공지능기술 확보를 위한 연구기관의 설립ㆍ운영) 과학기술정보통신부장관은 혁신적인 인공지능기술의 확\n 보를 위하여 필요한 경우 대통령"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "daec0443c791b520b2932f95f8361fc8a9ef0688acfdb425457bb8f71ceff568",
+          "article": "제29조",
+          "score": 0.312,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제29조(인공지능 신뢰 기반 조성을 위한 시책의 마련) 정부는 인공지능이 국민의 생활에 미치는 잠재적 위험을 최소화\n 하고 안전한 인공지능의 이"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "13cdd80c679b3e947c63b79ad083f841c5cc8fe5d7d6c420711a10f79b3fbd2c",
+          "article": "제2조",
+          "score": 0.3066,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제2조(정의) 이 법에서 사용하는 용어의 뜻은 다음과 같다. <개정 2026. 1. 20.>\n  1. “인공지능”이란 학습, 추론, 지각, 판단"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909": "제3조",
+        "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636": "제31조",
+        "b2924fdffe2ceede3ea0ab43ab86095ee409acfa1e34609597c58bea482228d8": "제22조의3",
+        "daec0443c791b520b2932f95f8361fc8a9ef0688acfdb425457bb8f71ceff568": "제29조",
+        "13cdd80c679b3e947c63b79ad083f841c5cc8fe5d7d6c420711a10f79b3fbd2c": "제2조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 0.5
+    },
+    {
+      "id": 4,
+      "type": "RR",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "고영향 AI를 제공하는 사업자는 어떤 조치를 해야 하나요?",
+      "gold": [
+        "제34조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8",
+          "article": "제34조",
+          "score": 0.575,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제34조(고영향 인공지능과 관련한 사업자의 책무) ① 인공지능사업자는 고영향 인공지능 또는 이를 이용한 제품ㆍ서비\n 스를 제공하는 경우 고영향 "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c5ed5bbf0e880502cb66669dca9ff034b08381ab6def58c3ea7a3554d8ed06e8",
+          "article": "제35조",
+          "score": 0.5345,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제35조(고영향 인공지능 영향평가) ① 인공지능사업자가 고영향 인공지능을 이용한 제품 또는 서비스를 제공하는 경우\n 사전에 사람의 기본권에 미치"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d34421c4c405dba812a11ed6daaed3d442799b357fa2c4f44262c7f89244cc1d",
+          "article": "제33조",
+          "score": 0.5305,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제33조(고영향 인공지능의 확인) ① 인공지능사업자는 인공지능 또는 이를 이용한 제품ㆍ서비스를 제공하는 경우 그\n 인공지능이 고영향 인공지능에 "
+        },
+        {
+          "rank": 4,
+          "chunk_id": "bd4bc7f901a27b35c6b0e111728420197fd6d6793f0c64ed6db68f0fd30ee47a",
+          "article": "제30조",
+          "score": 0.5008,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제30조(인공지능 안전성ㆍ신뢰성 검ㆍ인증등 지원) ① 과학기술정보통신부장관은 단체등이 인공지능의 안전성ㆍ신뢰\n 성 확보를 위하여 자율적으로 추진"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909",
+          "article": "제3조",
+          "score": 0.471,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제3조(기본원칙 및 국가 등의 책무) ① 인공지능기술과 인공지능산업은 안전성과 신뢰성을 제고하여 국민의 삶의 질을\n 향상시키는 방향으로 발전되어"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8": "제34조",
+        "c5ed5bbf0e880502cb66669dca9ff034b08381ab6def58c3ea7a3554d8ed06e8": "제35조",
+        "d34421c4c405dba812a11ed6daaed3d442799b357fa2c4f44262c7f89244cc1d": "제33조",
+        "bd4bc7f901a27b35c6b0e111728420197fd6d6793f0c64ed6db68f0fd30ee47a": "제30조",
+        "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909": "제3조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 5,
+      "type": "RR",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "대규모 연산으로 학습한 AI 사업자에게는 어떤 안전성 확보 의무가 있나요?",
+      "gold": [
+        "제32조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908",
+          "article": "제32조",
+          "score": 0.617,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제32조(인공지능 안전성 확보 의무) ① 인공지능사업자는 학습에 사용된 누적 연산량이 대통령령으로 정하는 기준 이\n 상인 인공지능시스템의 안전성"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636",
+          "article": "제31조",
+          "score": 0.4861,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제31조(인공지능 투명성 확보 의무) ① 인공지능사업자는 고영향 인공지능이나 생성형 인공지능을 이용한 제품 또는\n 서비스를 제공하려는 경우 제품"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8",
+          "article": "제34조",
+          "score": 0.4698,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제34조(고영향 인공지능과 관련한 사업자의 책무) ① 인공지능사업자는 고영향 인공지능 또는 이를 이용한 제품ㆍ서비\n 스를 제공하는 경우 고영향 "
+        },
+        {
+          "rank": 4,
+          "chunk_id": "87926a17689a27a100bbe75093f38e13d9f200253cf62fa3b5197dd67c0f8349",
+          "article": "제12조",
+          "score": 0.4677,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제12조(인공지능안전연구소) ① 과학기술정보통신부장관은 인공지능과 관련하여 발생할 수 있는 위험으로부터 국민의\n 생명ㆍ신체ㆍ재산 등을 보호하고 "
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a",
+          "article": "제21조",
+          "score": 0.4677,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제21조(전문인력의 확보) ① 과학기술정보통신부장관은 인공지능기술의 개발 및 인공지능산업의 발전을 위하여 「지능\n 정보화 기본법」 제23조제1항"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908": "제32조",
+        "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636": "제31조",
+        "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8": "제34조",
+        "87926a17689a27a100bbe75093f38e13d9f200253cf62fa3b5197dd67c0f8349": "제12조",
+        "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a": "제21조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 6,
+      "type": "RR",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "우리 서비스가 고영향 AI인지 헷갈리면 어디에 확인을 요청하나요?",
+      "gold": [
+        "제33조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d34421c4c405dba812a11ed6daaed3d442799b357fa2c4f44262c7f89244cc1d",
+          "article": "제33조",
+          "score": 0.5357,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제33조(고영향 인공지능의 확인) ① 인공지능사업자는 인공지능 또는 이를 이용한 제품ㆍ서비스를 제공하는 경우 그\n 인공지능이 고영향 인공지능에 "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8",
+          "article": "제34조",
+          "score": 0.4294,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제34조(고영향 인공지능과 관련한 사업자의 책무) ① 인공지능사업자는 고영향 인공지능 또는 이를 이용한 제품ㆍ서비\n 스를 제공하는 경우 고영향 "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "bd4bc7f901a27b35c6b0e111728420197fd6d6793f0c64ed6db68f0fd30ee47a",
+          "article": "제30조",
+          "score": 0.421,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제30조(인공지능 안전성ㆍ신뢰성 검ㆍ인증등 지원) ① 과학기술정보통신부장관은 단체등이 인공지능의 안전성ㆍ신뢰\n 성 확보를 위하여 자율적으로 추진"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c5ed5bbf0e880502cb66669dca9ff034b08381ab6def58c3ea7a3554d8ed06e8",
+          "article": "제35조",
+          "score": 0.3992,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제35조(고영향 인공지능 영향평가) ① 인공지능사업자가 고영향 인공지능을 이용한 제품 또는 서비스를 제공하는 경우\n 사전에 사람의 기본권에 미치"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636",
+          "article": "제31조",
+          "score": 0.3849,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제31조(인공지능 투명성 확보 의무) ① 인공지능사업자는 고영향 인공지능이나 생성형 인공지능을 이용한 제품 또는\n 서비스를 제공하려는 경우 제품"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "d34421c4c405dba812a11ed6daaed3d442799b357fa2c4f44262c7f89244cc1d": "제33조",
+        "e53465354ee9874596e3f20480f8022ba49faeeefdc9ab67920b86d3aaf95ad8": "제34조",
+        "bd4bc7f901a27b35c6b0e111728420197fd6d6793f0c64ed6db68f0fd30ee47a": "제30조",
+        "c5ed5bbf0e880502cb66669dca9ff034b08381ab6def58c3ea7a3554d8ed06e8": "제35조",
+        "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636": "제31조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 7,
+      "type": "둘다",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "한국에 사무소가 없는 해외 AI 업체는 국내에서 어떤 절차를 밟아야 하나요?",
+      "gold": [
+        "제36조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "c2982ab196eb17644ae1e67ddc764cfc744db7dbb0ef51ab22955cb6913e3f2c",
+          "article": "제36조",
+          "score": 0.507,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제36조(국내대리인 지정) ① 국내에 주소 또는 영업소가 없는 인공지능사업자로서 이용자 수, 매출액 등이 대통령령으\n 로 정하는 기준에 해당하는"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "6b7b51e41a4b9e522cdb62a348f63d02e7bd327404f631fde676a994080cdf10",
+          "article": "제16조",
+          "score": 0.4546,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제16조(인공지능기술 도입ㆍ활용 시책 등) ① 국가 및 지방자치단체는 기업 및 공공기관의 인공지능기술 도입 촉진 및\n 활용 확산을 위한 시책을 "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a",
+          "article": "제21조",
+          "score": 0.4528,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제21조(전문인력의 확보) ① 과학기술정보통신부장관은 인공지능기술의 개발 및 인공지능산업의 발전을 위하여 「지능\n 정보화 기본법」 제23조제1항"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "ecc4f9e4185e041d4d27098575c4eda47368076489b3b169b9433286510e004c",
+          "article": "제22조",
+          "score": 0.4282,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제22조(국제협력 및 해외시장 진출의 지원) ① 정부는 인공지능과 관련한 국제적 동향을 파악하고 국제협력을 추진하\n 여야 한다.\n ② 정부는 인"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c3392ed7d26be5a8a1033a8da54127da0d18d9572760a1d12fb359371f4a698f",
+          "article": "제11조",
+          "score": 0.4244,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제11조(인공지능정책센터) ① 과학기술정보통신부장관은 인공지능 관련 정책의 개발과 국제규범 정립ㆍ확산에 필요한\n 업무를 종합적으로 수행하기 위하"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "c2982ab196eb17644ae1e67ddc764cfc744db7dbb0ef51ab22955cb6913e3f2c": "제36조",
+        "6b7b51e41a4b9e522cdb62a348f63d02e7bd327404f631fde676a994080cdf10": "제16조",
+        "d4ac10b7d6ab1d270479268d33c25f64581565c616b35c1df6a1df67a3e6201a": "제21조",
+        "ecc4f9e4185e041d4d27098575c4eda47368076489b3b169b9433286510e004c": "제22조",
+        "c3392ed7d26be5a8a1033a8da54127da0d18d9572760a1d12fb359371f4a698f": "제11조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 8,
+      "type": "MQ",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "AI를 쓴다는 사실을 이용자에게 미리 안 알리면 어떤 제재를 받나요?",
+      "gold": [
+        "제43조",
+        "제31조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636",
+          "article": "제31조",
+          "score": 0.3789,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제31조(인공지능 투명성 확보 의무) ① 인공지능사업자는 고영향 인공지능이나 생성형 인공지능을 이용한 제품 또는\n 서비스를 제공하려는 경우 제품"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "da85406ac5dd3f8bf8f88e59f7b28987d81618d1151c20709a1dcfb1cb9748f7",
+          "article": "제40조",
+          "score": 0.3715,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제40조(사실조사 등) ① 과학기술정보통신부장관은 다음 각 호의 어느 하나에 해당하는 경우에는 인공지능사업자에 대\n 하여 관련 자료를 제출하게 "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908",
+          "article": "제32조",
+          "score": 0.3573,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제32조(인공지능 안전성 확보 의무) ① 인공지능사업자는 학습에 사용된 누적 연산량이 대통령령으로 정하는 기준 이\n 상인 인공지능시스템의 안전성"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c2982ab196eb17644ae1e67ddc764cfc744db7dbb0ef51ab22955cb6913e3f2c",
+          "article": "제36조",
+          "score": 0.3419,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제36조(국내대리인 지정) ① 국내에 주소 또는 영업소가 없는 인공지능사업자로서 이용자 수, 매출액 등이 대통령령으\n 로 정하는 기준에 해당하는"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909",
+          "article": "제3조",
+          "score": 0.3257,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제3조(기본원칙 및 국가 등의 책무) ① 인공지능기술과 인공지능산업은 안전성과 신뢰성을 제고하여 국민의 삶의 질을\n 향상시키는 방향으로 발전되어"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "7eeae74fe515a209eb9a3f87e5acf84d8251ce7b0de861d4acf8885332ade636": "제31조",
+        "da85406ac5dd3f8bf8f88e59f7b28987d81618d1151c20709a1dcfb1cb9748f7": "제40조",
+        "8ffd5d5cd622f0bdd230a37640ebd696d90413c67327c68cf96eac91f701d908": "제32조",
+        "c2982ab196eb17644ae1e67ddc764cfc744db7dbb0ef51ab22955cb6913e3f2c": "제36조",
+        "8614ab75152cba1e5a3dfc0adc4c876c0086e63a2d14193b0b687fa25f7e3909": "제3조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 0.5,
+      "rr": 1.0
+    },
+    {
+      "id": 9,
+      "type": "RR",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "국가인공지능전략위원회는 누구로 구성되나요?",
+      "gold": [
+        "제7조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "926515bde1ddaa67835c7bf9fc59c176fac82dd6893ae32f4f63298963574cff",
+          "article": "제7조",
+          "score": 0.5539,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제7조(국가인공지능전략위원회) ① 인공지능 발전과 신뢰 기반 조성 등을 위한 주요 정책 등에 관한 사항을 심의ㆍ의결\n 하기 위하여 대통령 소속으"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "b9c1520330930d19edcfe90c14575be6131fcfb2cbf31d63407a8059cb12f3c8",
+          "article": "제10조",
+          "score": 0.5369,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제10조(분과위원회 등) ① 위원회는 위원회의 업무를 전문 분야별로 수행하기 위하여 필요한 경우 분과위원회를 둘 수\n 있다.\n ② 위원회는 인공"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "3dc670724072c2a146242e703ee87740c8b809d8a4a3b2378bb983923a6575f5",
+          "article": "제8조",
+          "score": 0.5192,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제8조(위원회의 기능) ① 위원회는 다음 각 호의 사항을 심의ㆍ의결한다. <개정 2026. 1. 20.>\n  1. 기본계획의 수립ㆍ변경 및 시행"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b2924fdffe2ceede3ea0ab43ab86095ee409acfa1e34609597c58bea482228d8",
+          "article": "제22조의3",
+          "score": 0.4625,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제22조의3(인공지능기술 확보를 위한 연구기관의 설립ㆍ운영) 과학기술정보통신부장관은 혁신적인 인공지능기술의 확\n 보를 위하여 필요한 경우 대통령"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c5f42cf2c5bba33ec69ca38783c23ce862147c02509e5d8237ffd831465db18c",
+          "article": "제26조",
+          "score": 0.4405,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제26조(한국인공지능진흥협회의 설립) ① 인공지능등과 관련한 연구 및 업무에 종사하는 자는 인공지능의 개발ㆍ이용\n 촉진, 인공지능산업 및 인공지"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "926515bde1ddaa67835c7bf9fc59c176fac82dd6893ae32f4f63298963574cff": "제7조",
+        "b9c1520330930d19edcfe90c14575be6131fcfb2cbf31d63407a8059cb12f3c8": "제10조",
+        "3dc670724072c2a146242e703ee87740c8b809d8a4a3b2378bb983923a6575f5": "제8조",
+        "b2924fdffe2ceede3ea0ab43ab86095ee409acfa1e34609597c58bea482228d8": "제22조의3",
+        "c5f42cf2c5bba33ec69ca38783c23ce862147c02509e5d8237ffd831465db18c": "제26조"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    },
+    {
+      "id": 10,
+      "type": "둘다",
+      "answerable": true,
+      "latency_sec": 0.003,
+      "question": "중소기업이 AI를 도입할 때 정부에서 받을 수 있는 지원은 뭐가 있나요?",
+      "gold": [
+        "제16조",
+        "제17조"
+      ],
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "ef478a978db56d4c882bbdd4816c2024435f86e561585d862dc290103bfd9b78",
+          "article": "제17조",
+          "score": 0.5565,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제17조(중소기업등을 위한 특별지원) ① 이 법에 따라 인공지능기술 및 인공지능산업과 관련한 각종 지원시책을 시행\n 할 때에는 중소기업등을 우선"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "6b7b51e41a4b9e522cdb62a348f63d02e7bd327404f631fde676a994080cdf10",
+          "article": "제16조",
+          "score": 0.5243,
+          "rerank_score": null,
+          "is_gold": true,
+          "content": "제16조(인공지능기술 도입ㆍ활용 시책 등) ① 국가 및 지방자치단체는 기업 및 공공기관의 인공지능기술 도입 촉진 및\n 활용 확산을 위한 시책을 "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "ecc4f9e4185e041d4d27098575c4eda47368076489b3b169b9433286510e004c",
+          "article": "제22조",
+          "score": 0.5103,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제22조(국제협력 및 해외시장 진출의 지원) ① 정부는 인공지능과 관련한 국제적 동향을 파악하고 국제협력을 추진하\n 여야 한다.\n ② 정부는 인"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "26049dccf668e2b6223d984a9eae24c7cf58e301743fd855c1dd511d7d4d6c74",
+          "article": "제13조",
+          "score": 0.4924,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제13조(인공지능기술 개발 및 안전한 이용 지원) ① 정부는 인공지능기술 개발 활성화를 위하여 다음 각 호의 사업을\n 지원할 수 있다.\n 1. "
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d2a57d7500907d1f2d4aa4fc08ff7d0381bc75a67979e00112395fabb965874b",
+          "article": "제17조의2",
+          "score": 0.4732,
+          "rerank_score": null,
+          "is_gold": false,
+          "content": "제17조의2(인공지능제품 및 인공지능서비스 이용비용의 지원) ① 국가와 지방자치단체는 경제적 여건으로 인하여 인\n 공지능제품 및 인공지능서비스를"
+        }
+      ],
+      "dense_calls": 1,
+      "chunk_labels": {
+        "ef478a978db56d4c882bbdd4816c2024435f86e561585d862dc290103bfd9b78": "제17조",
+        "6b7b51e41a4b9e522cdb62a348f63d02e7bd327404f631fde676a994080cdf10": "제16조",
+        "ecc4f9e4185e041d4d27098575c4eda47368076489b3b169b9433286510e004c": "제22조",
+        "26049dccf668e2b6223d984a9eae24c7cf58e301743fd855c1dd511d7d4d6c74": "제13조",
+        "d2a57d7500907d1f2d4aa4fc08ff7d0381bc75a67979e00112395fabb965874b": "제17조의2"
+      },
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0
+      },
+      "hit": 1.0,
+      "recall": 1.0,
+      "rr": 1.0
+    }
+  ],
+  "config": {
+    "golden_set": "golden_set.jsonl",
+    "golden_set_hash": "faa005017cce",
+    "split": "all",
+    "num_questions": 10,
+    "data_version": "law-21311:whole-article-v1:data-mvp-v1",
+    "collection": "data_ingestion_law21311_v1",
+    "llm_model": "gpt-5.4-mini",
+    "embedding_model": "text-embedding-3-small",
+    "answer_generator": "none",
+    "answer_modes": [],
+    "judge": "none",
+    "judge_version": null,
+    "expand_prompt_version": "v2",
+    "code_version": "218d0b5-dirty",
+    "cache": "on",
+    "prepare": {
+      "batch_expanded": 0,
+      "batch_failed": [
+        "AttributeError: 'NoneType' object has no attribute 'items'"
+      ],
+      "requests": 2
+    },
+    "mode": "baseline",
+    "final_k": 5,
+    "candidate_k": 20
+  }
+}

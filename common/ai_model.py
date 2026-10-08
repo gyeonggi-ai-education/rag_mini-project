@@ -7,7 +7,8 @@ from common.config import (
     EMBEDDING_MODEL,
     MODEL,
     TEMPERATURE,
-    MAX_TOKENS
+    MAX_TOKENS,
+    MAX_RETRIES,
 )
 
 def get_llm_model(
@@ -23,6 +24,7 @@ def get_llm_model(
         temperature=temperature,
         use_responses_api=False,  # base url로 할 때는 이부분 넣어야 함.(MonoRouter 사용)
         max_tokens=max_tokens,
+        max_retries=MAX_RETRIES,
     )
 
 
@@ -31,7 +33,8 @@ def get_embedding_model():
     embeddings = OpenAIEmbeddings(
         api_key=API_KEY,
         base_url=BASE_URL,
-        model=embedding_model
+        model=embedding_model,
+        max_retries=MAX_RETRIES,
         )
     # print(embeddings)
     return embeddings

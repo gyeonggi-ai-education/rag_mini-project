@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Law RAG Viewer</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #fff; --head: #f1f2f5; --border: #e3e5ea;
+    --text: #1d2330; --muted: #6b7280; --accent: #4f46e5; --key: #6b7280; --str: #1d4ed8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161b; --card: #1c1f26; --head: #232731; --border: #2f3441;
+            --text: #e6e8ee; --muted: #9aa1b0; --accent: #818cf8; --key: #9aa1b0; --str: #7aa2ff; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.5 system-ui, -apple-system, "Noto Sans KR", sans-serif; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 24px;
+           display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+  h2 { margin: 0 0 4px; font-size: 26px; }
+  .meta { color: var(--muted); margin-bottom: 16px; }
+  .bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  input, select, button { font: inherit; color: inherit; background: var(--card);
+         border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
+  input { flex: 1; min-width: 200px; }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  .point { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+           margin-bottom: 16px; overflow: hidden; }
+  .point > .top { background: var(--head); padding: 10px 16px; font-weight: 600;
+                  display: flex; justify-content: space-between; align-items: center; }
+  .score { color: var(--accent); font-weight: 500; font-size: 12px; }
+  .body { padding: 12px 16px; }
+  .label { font-weight: 600; margin-bottom: 4px; }
+  pre { margin: 0; white-space: pre-wrap; word-break: break-all; font: 12px/1.6 ui-monospace, monospace; }
+  .k { color: var(--key); } .s { color: var(--str); }
+  .foot { border-top: 1px solid var(--border); padding: 10px 16px; display: flex;
+          justify-content: space-between; align-items: center; color: var(--muted); }
+  .empty, .error { text-align: center; color: var(--muted); padding: 32px; }
+  .error { color: #dc2626; }
+  .more { display: block; margin: 0 auto; }
+  .more[hidden] { display: none; }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <h2 id="title">-</h2>
+  <div class="meta" id="meta"></div>
+  <div class="bar">
+    <input id="filter" placeholder="Filter by payload (key:value) or point ID (id:123)  예) article:제1조 또는 그냥 제1조, 목적">
+    <button id="search">검색</button>
+    <button id="reset">초기화</button>
+  </div>
+  <div id="list"></div>
+  <button class="more" id="more" hidden>더 보기</button>
+</main>
+<script src="/static/nav.js"></script>
+<script>
+const $ =(id) => document.getElementById(id);
+const state = { collection: null, offset: null, similarOf: null };
+
+async function api(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+  return res.json();
+}
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function payloadHtml(payload) {
+  const rows = Object.entries(payload || {}).map(([k, v]) =>
+    `  <span class="k">"${esc(k)}"</span>: <span class="s">${esc(JSON.stringify(v))}</span>`);
+  return `{\n${rows.join(",\n")}\n}`;
+}
+
+function cardHtml(p) {
+  const score = p.score != null ? `<span class="score">score ${p.score.toFixed(4)}</span>` : "";
+  return `<div class="point">
+    <div class="top"><span>Point ${esc(p.id)}</span>${score}</div>
+    <div class="body"><div class="label">Payload</div><pre>${payloadHtml(p.payload)}</pre></div>
+    <div class="foot"><span>Vector length: ${p.vector_length ?? "-"}</span>
+      <button data-similar="${esc(p.id)}">Find Similar</button></div>
+  </div>`;
+}
+
+async function loadCollections() {
+  const { collections, default: def } = await api("/api/collections");
+  state.collection = collections.includes(def) ? def : collections[0];
+}
+
+async function loadInfo() {
+  $("title").textContent = state.collection;
+  try {
+    const i = await api(`/api/collections/${encodeURIComponent(state.collection)}`);
+    $("title").textContent = i.display_name || state.collection;
+    $("meta").textContent = `points ${i.points_count} · vector ${i.vector_length ?? "-"} · ${i.status}`;
+  } catch (e) { $("meta").textContent = ""; }
+}
+
+async function loadPoints(append = false) {
+  const list = $("list");
+  if (!append) { list.innerHTML = ""; state.offset = null; }
+  const q = new URLSearchParams({ limit: 10 });
+  if ($("filter").value.trim()) q.set("filter", $("filter").value.trim());
+  if (append && state.offset != null) q.set("offset", state.offset);
+  try {
+    const data = await api(`/api/collections/${encodeURIComponent(state.collection)}/points?${q}`);
+    list.insertAdjacentHTML("beforeend", data.points.map(cardHtml).join(""));
+    if (!list.children.length) list.innerHTML = '<div class="empty">포인트가 없습니다.</div>';
+    state.offset = data.next_offset;
+    $("more").hidden = data.next_offset == null;
+  } catch (e) {
+    list.innerHTML = `<div class="error">${esc(e.message)}</div>`;
+    $("more").hidden = true;
+  }
+}
+
+async function findSimilar(id) {
+  const list = $("list");
+  $("more").hidden = true;
+  try {
+    const data = await api(`/api/collections/${encodeURIComponent(state.collection)}/points/${encodeURIComponent(id)}/similar`);
+    list.innerHTML = `<div class="meta">Point ${esc(id)}와 유사한 포인트</div>` + data.points.map(cardHtml).join("");
+  } catch (e) {
+    list.innerHTML = `<div class="error">${esc(e.message)}</div>`;
+  }
+}
+
+$("search").onclick = () => loadPoints();
+$("filter").onkeydown = (e) => { if (e.key === "Enter") loadPoints(); };
+$("reset").onclick = () => { $("filter").value = ""; loadPoints(); };
+$("more").onclick = () => loadPoints(true);
+$("list").onclick = (e) => { const id = e.target.dataset?.similar; if (id) findSimilar(id); };
+
+(async () => {
+  try { await loadCollections(); await loadInfo(); await loadPoints(); }
+  catch (e) { $("list").innerHTML = `<div class="error">${esc(e.message)}</div>`; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 기본법 안내</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #fff; --head: #f1f2f5; --border: #e3e5ea;
+    --text: #1d2330; --muted: #6b7280; --accent: #4f46e5; --user: #4f46e5; --err: #dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161b; --card: #1c1f26; --head: #232731; --border: #2f3441;
+            --text: #e6e8ee; --muted: #9aa1b0; --accent: #818cf8; --user: #4f46e5; --err: #f87171; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column;
+         font: 15px/1.6 system-ui, -apple-system, "Noto Sans KR", sans-serif; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 24px;
+           display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 16px; margin: 0; flex: 1; }
+  header a { color: var(--accent); font-size: 13px; }
+  #log { flex: 1; overflow-y: auto; padding: 24px 16px; max-width: 800px; width: 100%; margin: 0 auto; }
+  .msg { margin-bottom: 20px; }
+  .q { background: var(--user); color: #fff; padding: 10px 14px; border-radius: 12px; margin-left: auto;
+       width: fit-content; max-width: 85%; white-space: pre-wrap; }
+  .a { background: var(--card); border: 1px solid var(--border); padding: 14px 16px; border-radius: 12px; }
+  .a .text { white-space: pre-wrap; }
+  .a.error .text { color: var(--err); }
+  .a.pending .text { color: var(--muted); }
+  .sources { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .sources > .label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  details { background: var(--head); border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details p { margin: 8px 0 0; font-size: 13px; color: var(--muted); white-space: pre-wrap; }
+  .hint { text-align: center; color: var(--muted); margin-top: 12vh; }
+  .examples { display: flex; flex-direction: column; gap: 8px; max-width: 460px; margin: 16px auto 0; }
+  .ex { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 10px;
+        padding: 10px 14px; text-align: left; font: inherit; font-size: 14px; }
+  .ex:hover { border-color: var(--accent); color: var(--accent); }
+  form { background: var(--card); border-top: 1px solid var(--border); padding: 12px 16px; }
+  .row { max-width: 800px; margin: 0 auto; display: flex; gap: 8px; }
+  input { flex: 1; font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--border);
+          border-radius: 10px; padding: 10px 14px; }
+  select { font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0 10px; }
+  .a .mode { margin-top: 10px; font-size: 12px; color: var(--muted); }
+  button { font: inherit; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 0 20px; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<div id="log">
+  <div class="hint" id="hint">
+    <p>AI 기본법에 대해 궁금한 점을 물어보세요.</p>
+    <div class="examples">
+      <button type="button" class="ex">고영향 인공지능이란 무엇인가요?</button>
+      <button type="button" class="ex">이 법은 해외에서 이루어진 행위에도 적용되나요?</button>
+      <button type="button" class="ex">챗봇이 AI라는 사실을 사용자에게 미리 알려야 하나요?</button>
+      <button type="button" class="ex">이 법의 목적이 뭐예요?</button>
+    </div>
+  </div>
+</div>
+<form id="form">
+  <div class="row">
+    <select id="mode" title="검색 방식">
+      <option value="combined">Multi Query + Rerank</option>
+      <option value="rerank">Rerank</option>
+      <option value="multi_query">Multi Query</option>
+      <option value="baseline">기본 검색</option>
+    </select>
+    <input id="question" placeholder="질문을 입력하세요" autocomplete="off" autofocus>
+    <button id="send">질문</button>
+  </div>
+</form>
+<script src="/static/nav.js"></script>
+<script>
+const $ =(id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const MODE_LABELS = { combined: "Multi Query + Rerank", rerank: "Rerank", multi_query: "Multi Query", baseline: "기본 검색" };
+
+function add(html) {
+  $("hint")?.remove();
+  const div = document.createElement("div");
+  div.className = "msg";
+  div.innerHTML = html;
+  $("log").appendChild(div);
+  $("log").scrollTop = $("log").scrollHeight;
+  return div;
+}
+
+function sourcesHtml(sources) {
+  if (!sources?.length) return "";
+  const items = sources.map((s) =>
+    `<details><summary>${esc(s.article || "근거")}</summary><p>${esc(s.content)}</p></details>`).join("");
+  return `<div class="sources"><div class="label">관련 법령</div>${items}</div>`;
+}
+
+document.querySelectorAll(".ex").forEach((b) => {
+  b.onclick = () => { $("question").value = b.textContent; $("form").requestSubmit(); };
+});
+
+$("form").onsubmit = async (e) => {
+  e.preventDefault();
+  const question = $("question").value.trim();
+  if (!question) return;
+  $("question").value = "";
+  $("send").disabled = true;
+  add(`<div class="q">${esc(question)}</div>`);
+  const reply = add(`<div class="a pending"><div class="text">답변을 만드는 중...</div></div>`);
+  try {
+    const res = await fetch("/ask", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify($("mode").value ? { question, mode: $("mode").value } : { question }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || res.statusText);
+    // 모델이 마크다운 별표를 섞어 보내도 화면에는 글자 그대로 보이지 않게 한다.
+    const answer = String(data.answer).replace(/\*\*/g, "");
+    reply.innerHTML = `<div class="a"><div class="text">${esc(answer)}</div>${sourcesHtml(data.sources)}<div class="mode">검색 방식: ${esc(MODE_LABELS[data.mode] || data.mode || "-")}</div></div>`;
+  } catch (err) {
+    reply.innerHTML = `<div class="a error"><div class="text">${esc(err.message)}</div></div>`;
+  } finally {
+    $("send").disabled = false;
+    $("question").focus();
+    $("log").scrollTop = $("log").scrollHeight;
+  }
+};
+</script>
+</body>
+</html>

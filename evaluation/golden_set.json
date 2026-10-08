@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "law": "인공지능 발전과 신뢰 기반 조성 등에 관한 기본법 (인공지능기본법)",
+    "source": "법률 제21311호, 시행 2026. 7. 21. (data/raw/ai_basic_act.pdf, 본문 표기 기준; 원문 대조 필요)",
+    "version": "v1",
+    "gold_unit": "조(article) 단위. 검색된 청크의 article 값(예: 제2조, 제22조의2)이 gold_articles 중 하나와 문자열이 같고 is_supplementary가 false이면 해당 근거를 찾은 것으로 본다. 항·호(gold_detail)는 사람이 원문을 대조할 때 참고용이다.",
+    "fields": {
+      "answerable": "false이면 문서에 근거가 없는 질문. 검색 지표(Hit/Recall/MRR)에서 제외하고 답변 불가 처리만 따로 평가한다.",
+      "split": "tune=개발·파라미터 조정용, final=최종 확인용(튜닝에 사용하지 않는다)",
+      "reference": "필수 답변 요소 요약(사람·LLM 채점 참고용)",
+      "stage": "base=기본 10문항, extend=확장 시 추가 5문항"
+    },
+    "types": [
+      "definition",
+      "lookup",
+      "numeric",
+      "paraphrase",
+      "multi",
+      "no_answer"
+    ],
+    "status": "초안: 정답 조문·항은 팀이 원문과 대조해 확정해야 한다. 소규모 탐색 평가셋이며 통계적 일반화에는 한계가 있다.",
+    "size": "기본 10문항(답변 가능 8 + 답변 불가 2, stage=base). 시간이 있으면 stage=extend 5문항을 더해 15문항으로 확장한다(계획서 7절). 이 파일 밖의 보관 후보는 golden_pool.json이며 평가에 사용하지 않는다."
+  },
+  "items": [
+    {"id": "q01", "type": "definition", "stage": "base", "answerable": true, "split": "tune", "question": "고영향 인공지능의 정의는 무엇인가요?", "gold_articles": ["제2조"], "gold_detail": ["제2조제4호"], "reference": "사람의 생명, 신체의 안전 및 기본권에 중대한 영향을 미치거나 위험을 초래할 우려가 있는 인공지능시스템으로서 에너지 공급, 보건의료, 채용·대출 심사 등 열거된 영역에서 활용되는 것"},
+    {"id": "q06", "type": "lookup", "stage": "base", "answerable": true, "split": "tune", "question": "이 법은 해외에서 이루어진 행위에도 적용되나요?", "gold_articles": ["제4조"], "gold_detail": ["제4조제1항"], "reference": "국외에서 이루어진 행위라도 국내 시장 또는 이용자에게 영향을 미치는 경우에는 적용"},
+    {"id": "q07", "type": "lookup", "stage": "base", "answerable": true, "split": "final", "question": "국방이나 국가안보 목적의 인공지능도 이 법의 적용을 받나요?", "gold_articles": ["제4조"], "gold_detail": ["제4조제2항"], "reference": "국방 또는 국가안보 목적으로만 개발·이용되는 인공지능으로서 대통령령으로 정하는 것은 적용하지 않음"},
+    {"id": "q24", "type": "paraphrase", "stage": "base", "answerable": true, "split": "tune", "question": "챗봇이 AI라는 사실을 사용자에게 미리 알려야 하나요?", "gold_articles": ["제31조"], "gold_detail": ["제31조제1항"], "reference": "고영향 또는 생성형 인공지능을 이용한 제품·서비스는 AI에 기반하여 운용된다는 사실을 이용자에게 사전 고지해야 함"},
+    {"id": "q34", "type": "multi", "stage": "base", "answerable": true, "split": "tune", "question": "고영향 인공지능을 제공하는 사업자가 지켜야 할 의무를 정리해 주세요.", "gold_articles": ["제33조", "제34조", "제35조"], "gold_detail": ["제33조제1항", "제34조제1항", "제35조제1항"], "reference": "사전 검토(고영향 해당 여부), 위험관리방안·설명방안·이용자 보호방안 수립, 사람의 관리·감독, 문서 작성·보관, 영향평가 노력 등"},
+    {"id": "q15", "type": "numeric", "stage": "base", "answerable": true, "split": "tune", "question": "국가인공지능전략위원회 위원은 최대 몇 명까지 둘 수 있나요?", "gold_articles": ["제7조"], "gold_detail": ["제7조제2항"], "reference": "위원장 1명과 3명 이내의 부위원장을 포함한 60명 이내"},
+    {"id": "q22", "type": "paraphrase", "stage": "base", "answerable": true, "split": "tune", "question": "AI가 채용 심사에 쓰이면 고영향 인공지능으로 보나요?", "gold_articles": ["제2조"], "gold_detail": ["제2조제4호사목"], "reference": "채용, 대출 심사 등 개인의 권리·의무 관계에 중대한 영향을 미치는 판단 또는 평가는 고영향 인공지능 영역"},
+    {"id": "q30", "type": "paraphrase", "stage": "base", "answerable": true, "split": "final", "question": "한국에 사무소가 없는 해외 AI 회사도 한국에 대리인을 둬야 하나요?", "gold_articles": ["제36조"], "gold_detail": ["제36조제1항"], "reference": "국내에 주소 또는 영업소가 없는 사업자로서 이용자 수·매출액 등이 대통령령 기준에 해당하면 국내대리인을 서면 지정하고 장관에게 신고"},
+    {"id": "q42", "type": "no_answer", "stage": "base", "answerable": false, "split": "tune", "question": "AI가 만든 그림의 저작권은 누구에게 있나요?", "gold_articles": [], "gold_detail": [], "reference": "이 법에는 저작권 귀속 규정이 없음(근거 없음으로 답해야 함)"},
+    {"id": "q44", "type": "no_answer", "stage": "base", "answerable": false, "split": "final", "question": "AI 때문에 개인정보가 유출되면 손해배상은 얼마까지 받을 수 있나요?", "gold_articles": [], "gold_detail": [], "reference": "이 법에는 손해배상 금액 규정이 없음(근거 없음으로 답해야 함)"},
+    {"id": "q02", "type": "definition", "stage": "extend", "answerable": true, "split": "tune", "question": "생성형 인공지능이란 무엇을 말하나요?", "gold_articles": ["제2조"], "gold_detail": ["제2조제5호"], "reference": "입력한 데이터의 구조와 특성을 모방하여 글, 소리, 그림, 영상 등 다양한 결과물을 생성하는 인공지능시스템"},
+    {"id": "q13", "type": "lookup", "stage": "extend", "answerable": true, "split": "tune", "question": "고영향 인공지능에 해당하는지 확인을 받으려면 어떻게 하나요?", "gold_articles": ["제33조"], "gold_detail": ["제33조제1항", "제33조제2항"], "reference": "사업자가 사전 검토 후 필요한 경우 과기정통부장관에게 확인 요청, 장관은 요청 시 해당 여부를 확인(필요시 전문위원회 자문)"},
+    {"id": "q26", "type": "paraphrase", "stage": "extend", "answerable": true, "split": "tune", "question": "AI 때문에 불이익을 받으면 AI가 왜 그런 결정을 했는지 설명을 요구할 수 있나요?", "gold_articles": ["제3조"], "gold_detail": ["제3조제2항"], "reference": "영향받는 자는 최종결과 도출에 활용된 주요 기준 및 원리 등에 대해 기술적·합리적으로 가능한 범위에서 설명을 제공받을 수 있어야 함"},
+    {"id": "q36", "type": "multi", "stage": "extend", "answerable": true, "split": "final", "question": "이 법을 위반하면 어떤 처벌이나 과태료가 있나요?", "gold_articles": ["제42조", "제43조"], "gold_detail": ["제42조", "제43조"], "reference": "비밀 누설 시 3년 이하 징역 또는 3천만원 이하 벌금, 고지 미이행·국내대리인 미지정·시정명령 미이행 시 3천만원 이하 과태료"},
+    {"id": "q20", "type": "numeric", "stage": "extend", "answerable": true, "split": "tune", "question": "고지 의무를 위반하면 과태료는 얼마까지 부과되나요?", "gold_articles": ["제43조"], "gold_detail": ["제43조제1항제1호"], "reference": "제31조제1항을 위반하여 고지를 이행하지 않은 자에게 3천만원 이하의 과태료"}
+  ]
+}
