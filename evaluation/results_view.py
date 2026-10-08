@@ -64,11 +64,36 @@ def latest_stamp(golden_set: str | None = REAL_GOLDEN) -> str | None:
     return runs[0]["stamp"] if runs else None
 
 
+def _hit_at(rows: list[dict], k: int) -> float:
+    """저장된 검색 결과(retrieved[].is_gold)로 Hit@k 계산 (답변 불가 문항 제외)"""
+    scored = [r for r in rows if r.get("answerable")]
+    if not scored:
+        return 0.0
+    return round(sum(any(x["is_gold"] for x in r["retrieved"][:k]) for r in scored) / len(scored), 4)
+
+
+def ensure_rank_metrics(run: dict) -> dict:
+    """Hit@1·Hit@3이 없는 예전 결과 파일도 저장된 순위로 계산해 채운다 (API 호출 없음)"""
+    summary, rows = run["summary"], run.get("rows") or []
+    if summary.get("status", "ok") != "ok" or not rows:
+        return run
+    first = next((r["retrieved"][0] for r in rows if r.get("retrieved")), None)
+    if not isinstance(first, dict):  # 개발 초기 형식은 계산하지 않음
+        return run
+    k = summary["final_k"]
+    summary.setdefault("hit@1", _hit_at(rows, 1))
+    if k > 3:
+        summary.setdefault("hit@3", _hit_at(rows, 3))
+    for type_name, by in summary.get("by_type", {}).items():
+        by.setdefault("hit@1", _hit_at([r for r in rows if r.get("type") == type_name], 1))
+    return run
+
+
 def load_runs(stamp: str) -> dict[str, dict]:
     """{모드: 결과 파일 내용}, 모드 순서는 baseline → rerank → multi_query → combined"""
     runs = {}
     for path in _result_files(stamp):
-        result = json.loads(path.read_text(encoding="utf-8"))
+        result = ensure_rank_metrics(json.loads(path.read_text(encoding="utf-8")))
         runs[result["summary"]["mode"]] = result
     order = {m: i for i, m in enumerate(MODE_ORDER)}
     return dict(sorted(runs.items(), key=lambda kv: order.get(kv[0], len(order))))
@@ -184,6 +209,8 @@ def stable_metrics(summary: dict) -> dict | None:
     k, ck = summary["final_k"], summary["candidate_k"]
     return {
         "k": k,
+        "hit_at_1": summary.get("hit@1"),
+        "hit_at_3": summary.get("hit@3"),
         "hit": summary.get(f"hit@{k}"),
         "recall": summary.get(f"recall@{k}"),
         "mrr": summary.get("mrr"),
@@ -197,7 +224,8 @@ def stable_metrics(summary: dict) -> dict | None:
         "expansion_failures": summary.get("expansion_failures"),
         "total_tokens": summary.get("total_tokens"),
         "by_type": {
-            t: {"n": v["n"], "hit": v.get(f"hit@{k}"), "recall": v.get(f"recall@{k}"), "mrr": v.get("mrr")}
+            t: {"n": v["n"], "hit_at_1": v.get("hit@1"), "hit": v.get(f"hit@{k}"),
+                "recall": v.get(f"recall@{k}"), "mrr": v.get("mrr")}
             for t, v in summary.get("by_type", {}).items()
         },
         "answer": summary.get("answer"),
@@ -369,13 +397,25 @@ def print_results(data: dict, detail: bool = False):
     print(f"=== 평가 결과 {data['stamp']} ===")
     print("설정:", json.dumps(data["config"], ensure_ascii=False))
     print()
-    print(f"{'모드':<12} {'Hit@' + str(k):>7} {'Recall@' + str(k):>9} {'MRR':>6} {'후보Recall':>10} {'지연(초)':>9}")
+    def cell(value):
+        return "-" if value is None else value
+
+    print(f"{'모드':<12} {'Hit@1':>7} {'Hit@3':>7} {'Hit@' + str(k):>7} {'Recall@' + str(k):>9} {'MRR':>6} "
+          f"{'후보Recall':>10} {'지연(초)':>9}")
     for mode, s in data["summary"].items():
         if s.get("status", "ok") != "ok":
             print(f"{mode:<12} ⏸ {s.get('message', s.get('status'))}")
             continue
         cand = next((v for key, v in s.items() if key.startswith("candidate_recall@")), "-")
-        print(f"{mode:<12} {s[f'hit@{k}']:>7} {s[f'recall@{k}']:>9} {s['mrr']:>6} {cand:>10} {s['avg_latency_sec']:>9}")
+        print(f"{mode:<12} {cell(s.get('hit@1')):>7} {cell(s.get('hit@3')):>7} {s[f'hit@{k}']:>7} "
+              f"{s[f'recall@{k}']:>9} {s['mrr']:>6} {cand:>10} {s['avg_latency_sec']:>9}")
+    types = sorted({t for s in data["summary"].values() for t in s.get("by_type", {})})
+    if types:
+        print()
+        print(f"{'유형별 Hit@1':<12} " + " ".join(f"{t + '(' + str(next((s['by_type'][t]['n'] for s in data['summary'].values() if t in s.get('by_type', {})), '')) + ')':>9}" for t in types))
+        for mode, s in data["summary"].items():
+            if s.get("status", "ok") == "ok":
+                print(f"{mode:<12} " + " ".join(f"{cell(s['by_type'].get(t, {}).get('hit@1')):>9}" for t in types))
     answer_modes = {m: s["answer"] for m, s in data["summary"].items() if "answer" in s}
     if answer_modes:
         print()

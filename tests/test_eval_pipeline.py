@@ -47,6 +47,7 @@ def test_all_modes_and_report():
     for mode, run in runs.items():
         s = run["summary"]
         assert s["n"] == 10 and 0 <= s["hit@5"] <= 1, mode
+        assert s["hit@1"] <= s["hit@3"] <= s["hit@5"], mode   # Hit@1·Hit@3도 항상 기록
         if mode in ("rerank", "combined"):
             assert "candidate_recall@10" in s, mode
             assert all("candidate_ids" in r and r["retrieved"][0]["rerank_score"] is not None for r in run["rows"])

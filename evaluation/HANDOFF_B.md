@@ -61,6 +61,8 @@ app.include_router(eval_router)
 |---|---|---|
 | 모드 | 키 | baseline, rerank, multi_query, combined |
 | 상태 | `status` | `ok` / `not_connected` (`message`에 사유, 예: Rerank 미연결) |
+| Hit@1 | `hit_at_1` | 1위 청크가 정답인 질문 비율 (답변에 가장 크게 쓰이는 근거가 맞는지) |
+| Hit@3 | `hit_at_3` | 상위 3개 안에 정답이 있는 질문 비율 (K가 3보다 클 때) |
 | Hit@K | `hit` | 정답 근거를 하나 이상 찾은 질문 비율 |
 | Recall@K | `recall` | 질문별 필요한 정답 근거 중 찾은 비율의 평균 |
 | MRR | `mrr` | 첫 정답 순위의 역수 평균 (1위=1, 2위=0.5) |
@@ -95,7 +97,7 @@ API 호출을 줄이려고 답변은 기본적으로 **baseline과 multi_query �
 
 ### 4-3. 결과표 ③ 질문 유형별 (`metrics[모드].by_type`)
 
-유형: 기준 / MQ(일상어) / RR(경쟁 조항) / 둘다. 각 `{n, hit, recall, mrr}`.
+유형: 기준 / MQ(일상어) / RR(경쟁 조항) / 둘다. 각 `{n, hit_at_1, hit, recall, mrr}`.
 "Multi Query는 MQ 유형에서, Rerank는 RR 유형에서 효과가 있었는가"를 보여 주는 표.
 
 ### 4-4. 질문별 비교 (`questions[]`)

@@ -46,16 +46,31 @@ def build_report(stamp: str, runs: dict[str, dict]) -> str:
 
     # 요약 표
     ck = any_run["summary"]["candidate_k"]
-    lines += [f"| 모드 | Hit@{k} | Recall@{k} | MRR | Rerank 전 후보 Recall@{ck} | 평균 지연(초) | 평균 LLM 호출 |",
-              "|---|---|---|---|---|---|---|"]
+    lines += ["Hit@1 = 1위 청크가 정답 조문인 문항 비율 (답변에 가장 크게 쓰이는 근거가 맞는지). "
+              "정답이 여러 개인 문항은 하나만 맞아도 Hit이므로 Recall과 함께 본다.", "",
+              f"| 모드 | Hit@1 | Hit@3 | Hit@{k} | Recall@{k} | MRR | Rerank 전 후보 Recall@{ck} | 평균 지연(초) | 평균 LLM 호출 |",
+              "|---|---|---|---|---|---|---|---|---|"]
     for mode, run in runs.items():
         s = run["summary"]
         cand = s.get(f"candidate_recall@{ck}", "-")
-        lines.append(f"| {mode} | {s[f'hit@{k}']} | {s[f'recall@{k}']} | {s['mrr']} | {cand} "
-                     f"| {s['avg_latency_sec']} | {s.get('avg_llm_calls', '-')} |")
+        lines.append(f"| {mode} | {s.get('hit@1', '-')} | {s.get('hit@3', '-')} | {s[f'hit@{k}']} | {s[f'recall@{k}']} "
+                     f"| {s['mrr']} | {cand} | {s['avg_latency_sec']} | {s.get('avg_llm_calls', '-')} |")
     for mode, s in pending.items():
-        lines.append(f"| {mode} | ⏸ {s.get('message', s.get('status'))} | | | | | |")
+        lines.append(f"| {mode} | ⏸ {s.get('message', s.get('status'))} | | | | | | | |")
     lines.append("")
+
+    # 유형별: 어떤 기법이 어떤 질문 유형에서 효과가 있었는지 (MQ=일상어, RR=경쟁 조항)
+    types = sorted({t for run in runs.values() for t in run["summary"].get("by_type", {})})
+    if types:
+        first = next(iter(runs.values()))["summary"]["by_type"]
+        lines += ["### 유형별 Hit@1 / MRR", "",
+                  "| 모드 | " + " | ".join(f"{t} ({first.get(t, {}).get('n', '')}문항)" for t in types) + " |",
+                  "|---|" + "---|" * len(types)]
+        for mode, run in runs.items():
+            by = run["summary"].get("by_type", {})
+            cells = [f"{by[t].get('hit@1', '-')} / {by[t]['mrr']}" if t in by else "-" for t in types]
+            lines.append(f"| {mode} | " + " | ".join(cells) + " |")
+        lines.append("")
 
     answer_runs = {m: run["summary"]["answer"] for m, run in runs.items() if "answer" in run["summary"]}
     if answer_runs:
@@ -70,7 +85,7 @@ def build_report(stamp: str, runs: dict[str, dict]) -> str:
     # 질문별 한눈에 보기
     rows_by_mode = {m: {r["id"]: r for r in run["rows"]} for m, run in runs.items()}
     compare = [m for m in modes if m != "baseline"] if "baseline" in modes else []
-    lines += ["## 질문별 요약", "", "RR: 첫 정답 순위의 역수 (1위=1.00, 2위=0.50, Top-K 밖=0.00). 판정은 baseline 대비.", "",
+    lines += ["## 질문별 요약", "", "RR: 첫 정답 순위의 역수 (1위=1.00 → Hit@1, 2위=0.50, Top-K 밖=0.00). 판정은 baseline 대비.", "",
               "| ID | 유형 | " + " | ".join(f"{m} RR" for m in modes)
               + "".join(f" | {m} 판정" for m in compare) + " |",
               "|---|---|" + "---|" * (len(modes) + len(compare))]

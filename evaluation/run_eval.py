@@ -475,6 +475,9 @@ def _average(rows: list[dict], final_k: int) -> dict:
     n = len(rows) or 1
     return {
         "n": len(rows),
+        # Hit@1: 1위 청크가 정답인 비율 (답변에 가장 크게 쓰이는 근거), Hit@3: 상위 3개 안
+        "hit@1": round(sum(r["hit1"] for r in rows) / n, 4),
+        **({"hit@3": round(sum(r["hit3"] for r in rows) / n, 4)} if final_k > 3 else {}),
         f"hit@{final_k}": round(sum(r["hit"] for r in rows) / n, 4),
         f"recall@{final_k}": round(sum(r["recall"] for r in rows) / n, 4),
         "mrr": round(sum(r["rr"] for r in rows) / n, 4),
@@ -522,6 +525,8 @@ def evaluate(mode: str, golden: list[dict], candidate_k: int, final_k: int, dens
         if item["answerable"]:
             evidences = item["evidences"]
             row["hit"] = hit_at_k(results, evidences, final_k)
+            row["hit1"] = hit_at_k(results, evidences, 1)
+            row["hit3"] = hit_at_k(results, evidences, min(3, final_k))
             row["recall"] = recall_at_k(results, evidences, final_k)
             row["rr"] = reciprocal_rank(results, evidences, final_k)
         rows.append(row)
