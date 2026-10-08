@@ -1,0 +1,14 @@
+name: qdrant-local-replica
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+    volumes:
+      - replica_storage:/qdrant/storage
+
+volumes:
+  replica_storage:

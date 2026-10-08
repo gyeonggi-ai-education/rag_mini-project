@@ -1,0 +1,20 @@
+{
+  "schema_version": "snapshot-bundle-v1",
+  "snapshot_file": "law_21311.snapshot",
+  "snapshot_sha256": "fcd52cac4ff7a00a23e0e569ed360974adbcd87eaaa3505eca57f586ac2e5139",
+  "snapshot_bytes": 811520,
+  "qdrant_version": "1.19.2",
+  "source_collection": "data_ingestion_law21311_v1",
+  "suggested_target_collection": "data_ingestion_law21311_v1",
+  "points_count": 46,
+  "vector_dimensions": 1536,
+  "distance": "Cosine",
+  "embedding_provider": "monorouter",
+  "embedding_model": "text-embedding-3-small",
+  "scope": "46 PDF chunks with real embeddings and source metadata",
+  "verified": {
+    "source_points": 46,
+    "ingested_payloads_matched": true,
+    "replica_restore_tested": false
+  }
+}

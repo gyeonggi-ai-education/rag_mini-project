@@ -1,0 +1,9 @@
+{
+  "mode": "write",
+  "collection": "data_ingestion_law21311_v1",
+  "provider": "monorouter",
+  "model": "text-embedding-3-small",
+  "dimensions": 1536,
+  "chunk_count": 46,
+  "verified_count": 46
+}
